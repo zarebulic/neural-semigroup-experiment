@@ -19,7 +19,7 @@ from torch.functional import einsum
 from torch.nn import Module
 from torch.nn.functional import kl_div
 
-from neural_semigroups.utils import count_different, make_discrete
+from utils import count_different, make_discrete
 
 
 class AssociatorLoss(Module):
