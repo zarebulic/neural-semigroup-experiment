@@ -17,7 +17,7 @@ import torch
 from torch import Tensor
 from torch.nn import Module
 
-from neural_semigroups.constants import CURRENT_DEVICE
+from constants import CURRENT_DEVICE
 
 
 class ConstantBaseline(Module):
