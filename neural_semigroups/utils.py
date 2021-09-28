@@ -25,8 +25,8 @@ import torch
 from torch import Tensor
 from tqdm import tqdm
 
-from constants import CURRENT_DEVICE
-from magma import Magma, get_two_indices_per_sample
+from neural_semigroups.constants import CURRENT_DEVICE
+from neural_semigroups.magma import Magma, get_two_indices_per_sample
 
 # the Cayley table of Klein Vierergruppe
 # pylint: disable=not-callable
