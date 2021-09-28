@@ -13,12 +13,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from neural_semigroups.associator_loss import AssociatorLoss
-from neural_semigroups.constant_baseline import ConstantBaseline
-from neural_semigroups.cyclic_group import CyclicGroup
-from neural_semigroups.denoising_autoencoder import MagmaDAE
-from neural_semigroups.mace4_semigroups_dataset import Mace4Semigroups
-from neural_semigroups.magma import Magma
-from neural_semigroups.precise_guess_loss import PreciseGuessLoss
-from neural_semigroups.semigroups_dataset import SemigroupsDataset
-from neural_semigroups.smallsemi_dataset import Smallsemi
+from associator_loss import AssociatorLoss
+from constant_baseline import ConstantBaseline
+from cyclic_group import CyclicGroup
+from denoising_autoencoder import MagmaDAE
+from mace4_semigroups_dataset import Mace4Semigroups
+from magma import Magma
+from precise_guess_loss import PreciseGuessLoss
+from semigroups_dataset import SemigroupsDataset
+from smallsemi_dataset import Smallsemi
