@@ -36,10 +36,10 @@ from torch.nn import Module
 from torch.optim import Adam
 from torch.utils.data.dataloader import DataLoader
 
-from associator_loss import AssociatorLoss
-from constants import CURRENT_DEVICE
-from precise_guess_loss import PreciseGuessLoss
-from utils import get_newest_file
+from neural_semigroups.associator_loss import AssociatorLoss
+from neural_semigroups.constants import CURRENT_DEVICE
+from neural_semigroups.precise_guess_loss import PreciseGuessLoss
+from neural_semigroups.utils import get_newest_file
 
 
 def get_arguments() -> Namespace:
@@ -281,7 +281,7 @@ def learning_pipeline(
     )
     with get_tensorboard_logger(trainer, evaluators, list(metrics.keys())):
         trainer.run(data_loaders[0], max_epochs=int(params["epochs"]))
-        
+
     @trainer.on(Events.EPOCH_COMPLETED)
     def log_training_results(a_trainer):
         evaluators.train.run(data_loaders[0])
