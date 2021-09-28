@@ -36,10 +36,10 @@ from torch.nn import Module
 from torch.optim import Adam
 from torch.utils.data.dataloader import DataLoader
 
-from neural_semigroups.associator_loss import AssociatorLoss
-from neural_semigroups.constants import CURRENT_DEVICE
-from neural_semigroups.precise_guess_loss import PreciseGuessLoss
-from neural_semigroups.utils import get_newest_file
+from associator_loss import AssociatorLoss
+from constants import CURRENT_DEVICE
+from precise_guess_loss import PreciseGuessLoss
+from utils import get_newest_file
 
 
 def get_arguments() -> Namespace:
