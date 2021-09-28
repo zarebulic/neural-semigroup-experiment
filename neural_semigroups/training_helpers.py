@@ -281,3 +281,13 @@ def learning_pipeline(
     )
     with get_tensorboard_logger(trainer, evaluators, list(metrics.keys())):
         trainer.run(data_loaders[0], max_epochs=int(params["epochs"]))
+        
+    @trainer.on(Events.EPOCH_COMPLETED)
+    def log_training_results(a_trainer):
+        evaluators.train.run(data_loaders[0])
+        output = evaluators.train.state.output
+        f = open("dict.txt", "a")
+        f.write(output)
+        f.close()
+        # output = [(y_pred0, y0), (y_pred1, y1), ...]
+        # do something with output, e.g., plotting
