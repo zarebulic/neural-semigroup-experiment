@@ -16,7 +16,7 @@
 from torch import Tensor
 from torch.nn import Module
 
-from neural_semigroups.utils import count_different, make_discrete
+from utils import count_different, make_discrete
 
 
 class PreciseGuessLoss(Module):
