@@ -17,6 +17,7 @@ from argparse import ArgumentParser, Namespace
 from datetime import datetime
 from typing import Callable, Dict, List, Tuple, Union
 
+
 import torch
 from ignite.contrib.handlers.tensorboard_logger import (
     OutputHandler,
@@ -30,7 +31,7 @@ from ignite.engine import (
     create_supervised_evaluator,
     create_supervised_trainer,
 )
-from ignite.handlers import EarlyStopping, ModelCheckpoint
+from ignite.handlers import EarlyStopping, ModelCheckpoint, EpochOutputStore
 from ignite.metrics import Metric, RunningAverage
 from torch.nn import Module
 from torch.optim import Adam
@@ -261,8 +262,10 @@ def learning_pipeline(
     :param metrics: a dictionary of additional metrics to evaluate
     :param data_loaders: train, validation, and test data loaders
     """
+    eos = EpochOutputStore()
     trainer = get_trainer(model, params["learning_rate"], loss)
     evaluators = ThreeEvaluators(model, metrics)
+    eos.attach(evaluators, 'output')
 
     @trainer.on(Events.EPOCH_COMPLETED)
     # pylint: disable=unused-argument,unused-variable
@@ -286,8 +289,8 @@ def learning_pipeline(
     def log_training_results(a_trainer):
         evaluators.train.run(data_loaders[0])
         output = evaluators.train.state.output
-        f = open("dict.txt", "a")
-        f.write(output)
+        f = open("saving.txt", "a")
+        f.write('success')
         f.close()
         # output = [(y_pred0, y0), (y_pred1, y1), ...]
         # do something with output, e.g., plotting
