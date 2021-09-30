@@ -17,13 +17,14 @@ from argparse import ArgumentParser, Namespace
 from datetime import datetime
 from typing import Callable, Dict, List, Tuple, Union
 
-
 import torch
 from ignite.contrib.handlers.tensorboard_logger import (
     OutputHandler,
     TensorboardLogger,
     global_step_from_engine,
 )
+from ignite.handlers.stores import EpochOutputStore
+
 from ignite.contrib.handlers.tqdm_logger import ProgressBar
 from ignite.engine import (
     Engine,
@@ -31,7 +32,7 @@ from ignite.engine import (
     create_supervised_evaluator,
     create_supervised_trainer,
 )
-from ignite.handlers import EarlyStopping, ModelCheckpoint, EpochOutputStore
+from ignite.handlers import EarlyStopping, ModelCheckpoint
 from ignite.metrics import Metric, RunningAverage
 from torch.nn import Module
 from torch.optim import Adam
@@ -265,8 +266,9 @@ def learning_pipeline(
     eos = EpochOutputStore()
     trainer = get_trainer(model, params["learning_rate"], loss)
     evaluators = ThreeEvaluators(model, metrics)
-    eos.attach(evaluators, 'output')
-
+    eos.attach(evaluators.train, 'output')
+    
+    
     @trainer.on(Events.EPOCH_COMPLETED)
     # pylint: disable=unused-argument,unused-variable
     def validate(a_trainer):
@@ -287,10 +289,11 @@ def learning_pipeline(
 
     @trainer.on(Events.EPOCH_COMPLETED)
     def log_training_results(a_trainer):
+        print('I am here')
         evaluators.train.run(data_loaders[0])
         output = evaluators.train.state.output
-        f = open("saving.txt", "a")
-        f.write('success')
+        f = open("test.txt", "w")
+        f.write(output)
         f.close()
         # output = [(y_pred0, y0), (y_pred1, y1), ...]
         # do something with output, e.g., plotting
