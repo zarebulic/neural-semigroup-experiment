@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import os
 from argparse import ArgumentParser, Namespace
 from datetime import datetime
 from typing import Callable, Dict, List, Tuple, Union
@@ -23,8 +24,6 @@ from ignite.contrib.handlers.tensorboard_logger import (
     TensorboardLogger,
     global_step_from_engine,
 )
-from ignite.handlers.stores import EpochOutputStore
-
 from ignite.contrib.handlers.tqdm_logger import ProgressBar
 from ignite.engine import (
     Engine,
@@ -32,6 +31,7 @@ from ignite.engine import (
     create_supervised_evaluator,
     create_supervised_trainer,
 )
+from ignite.handlers.stores import EpochOutputStore
 from ignite.handlers import EarlyStopping, ModelCheckpoint
 from ignite.metrics import Metric, RunningAverage
 from torch.nn import Module
@@ -197,7 +197,10 @@ def get_tensorboard_logger(
     :param metric_names: a list of metrics to log during validation and testing
     """
     tb_logger = TensorboardLogger(
-        log_dir=f"runs/{datetime.now()}", flush_secs=1
+        log_dir=os.path.join(
+            "runs", f"{datetime.now().strftime('%Y.%m.%d.%H.%M.%S')}"
+        ),
+        flush_secs=1,
     )
     training_loss = OutputHandler(
         "training",
@@ -267,8 +270,7 @@ def learning_pipeline(
     trainer = get_trainer(model, params["learning_rate"], loss)
     evaluators = ThreeEvaluators(model, metrics)
     eos.attach(evaluators.train, 'output')
-    
-    
+
     @trainer.on(Events.EPOCH_COMPLETED)
     # pylint: disable=unused-argument,unused-variable
     def validate(a_trainer):
@@ -286,14 +288,13 @@ def learning_pipeline(
     )
     with get_tensorboard_logger(trainer, evaluators, list(metrics.keys())):
         trainer.run(data_loaders[0], max_epochs=int(params["epochs"]))
-
+    
     @trainer.on(Events.EPOCH_COMPLETED)
     def log_training_results(a_trainer):
-        print('I am here')
-        evaluators.train.run(data_loaders[0])
-        output = evaluators.train.state.output
-        f = open("test.txt", "w")
-        f.write(output)
+        f = open("saving.txt", "w")
+        f.write('success')
         f.close()
-        # output = [(y_pred0, y0), (y_pred1, y1), ...]
-        # do something with output, e.g., plotting
+
+        #evaluators.train.run(data_loaders[0])
+        #output = evaluators.train.state.output
+
